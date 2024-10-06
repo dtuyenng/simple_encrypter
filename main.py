@@ -1,13 +1,20 @@
 import base64
-
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from pathlib import Path
+import json
 
 class Encrypter:
-    def __init__(self, salt: str):
-        self.salt = salt
+    def __init__(self):
+        self.salt = self.import_salt()
+
+    @staticmethod
+    def import_salt() -> str:
+        json_data = json.loads(Path("config.json").read_text())
+        print("Config file loaded.")
+        return json_data["salt"]
+
 
     def generate_key(self, password: str) -> bytes:
         kdf = PBKDF2HMAC(
@@ -31,22 +38,28 @@ class Encrypter:
         write_path.write_bytes(encrypted_data)
         print(f"File encrypted and saved to: {write_path}")
 
-    def decrypt_file(self, path: str, input_password: str):
-        key = self.generate_key(input_password)
-        fernet = Fernet(key)
+    def decrypt_file(self, file_path: str, input_password: str):
 
-        encrypted_data = Path(path).read_bytes()
-        decrypted_data = fernet.decrypt(encrypted_data)
+        try:
+            key = self.generate_key(input_password)
+            fernet = Fernet(key)
 
-        write_path = Path("decrypted_data.rename")
-        write_path.write_bytes(decrypted_data)
+            write_path = Path(file_path)
+            encrypted_data = write_path.read_bytes()
+
+            decrypted_data = fernet.decrypt(encrypted_data)
+
+            write_path = Path("decrypted_data.rename")
+            write_path.write_bytes(decrypted_data)
+            print("Decryption Successful: 'decrypted_data.rename' created.")
+
+        except FileNotFoundError:
+            print(f"File not found.")
+        except InvalidToken:
+            print("Decryption failed. The password might be incorrect or the data might be corrupted.")
 
 
-
-password = b"insertpasswordhere"
-my_salt = "insertsalthere"
-
-encrypter = Encrypter(my_salt)
+encrypter = Encrypter()
 
 def display_menu():
     print("E)ncrypt file  D)ecrypt file - Q)uit")
