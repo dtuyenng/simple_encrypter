@@ -15,7 +15,6 @@ class Encrypter:
         print("Config file loaded.")
         return json_data["salt"]
 
-
     def generate_key(self, password: str) -> bytes:
         kdf = PBKDF2HMAC(
             algorithm = hashes.SHA256(),
@@ -39,7 +38,6 @@ class Encrypter:
         print(f"File encrypted and saved to: {write_path}")
 
     def decrypt_file(self, file_path: str, input_password: str):
-
         try:
             key = self.generate_key(input_password)
             fernet = Fernet(key)
@@ -52,14 +50,12 @@ class Encrypter:
             write_path = Path("decrypted_data.rename")
             write_path.write_bytes(decrypted_data)
             print("Decryption Successful: 'decrypted_data.rename' created.")
-
         except FileNotFoundError:
             print(f"File not found.")
         except InvalidToken:
             print("Decryption failed. The password might be incorrect or the data might be corrupted.")
 
 
-encrypter = Encrypter()
 
 def display_menu():
     print("E)ncrypt file  D)ecrypt file - Q)uit")
@@ -67,6 +63,7 @@ def display_menu():
     return choice
 
 def main():
+    encrypter = Encrypter()
     while True:
         choice = display_menu()
         if choice == "q":
@@ -81,8 +78,6 @@ def main():
             file_path = input("Path: ")
             file_password = input("Password: ")
             encrypter.decrypt_file(file_path, file_password)
-
-
 
 if __name__ == "__main__":
     main()
