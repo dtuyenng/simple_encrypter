@@ -5,6 +5,50 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from pathlib import Path
 import json
 
+import customtkinter as ctk
+
+def main():
+    app = Application()
+    frame = Frame(app)
+    app.mainloop()
+
+
+class Application(ctk.CTk):
+
+    def __init__(self):
+        super().__init__()
+        self.geometry('600x400')
+
+class Frame(ctk.CTkFrame):
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.pack()
+        label = ctk.CTkLabel(self, text="Hello World")
+        label.pack()
+        entry = ctk.CTkEntry(self)
+        entry.pack()
+
+        button = CustomButton(self, text="Press Me", command=self.button_press)
+
+    @staticmethod
+    def button_press(event=None):
+        print("Button Pressed")
+
+class CustomButton(ctk.CTkButton):
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.pack()
+
+
+
+
+
+# button = ctk.CTkButton(app, text="Press Me",
+#                        fg_color= "red",
+#                        corner_radius= 20,
+#                        command = lambda: print("Hello World"))
+# button.pack()
+
 class Encrypter:
     def __init__(self):
         self.salt = self.import_salt()
@@ -57,27 +101,29 @@ class Encrypter:
 
 
 
-def display_menu():
-    print("E)ncrypt file  D)ecrypt file - Q)uit")
-    choice = input("Enter Input:  ")
-    return choice
+# def display_menu():
+#     print("E)ncrypt file  D)ecrypt file - Q)uit")
+#     choice = input("Enter Input:  ")
+#     return choice
+#
+# def main():
+#     encrypter = Encrypter()
+#     while True:
+#         choice = display_menu()
+#         if choice == "q":
+#             break
+#         if choice == "e":
+#             print("------------- Encrypt File -------------")
+#             file_path = input("Path: ")
+#             file_password = input("Password: ")
+#             encrypter.encrypt_file(file_path, file_password)
+#         if choice == "d":
+#             print("------------- decrypt File -------------")
+#             file_path = input("Path: ")
+#             file_password = input("Password: ")
+#             encrypter.decrypt_file(file_path, file_password)
 
-def main():
-    encrypter = Encrypter()
-    while True:
-        choice = display_menu()
-        if choice == "q":
-            break
-        if choice == "e":
-            print("------------- Encrypt File -------------")
-            file_path = input("Path: ")
-            file_password = input("Password: ")
-            encrypter.encrypt_file(file_path, file_password)
-        if choice == "d":
-            print("------------- decrypt File -------------")
-            file_path = input("Path: ")
-            file_password = input("Password: ")
-            encrypter.decrypt_file(file_path, file_password)
+
 
 if __name__ == "__main__":
     main()
