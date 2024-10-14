@@ -25,14 +25,33 @@ class Application(ctk.CTk):
         self.configure(fg_color="white")
 
         self.file_selector = FileSelector(self)
-        self.password_input = PasswordInput(self)
+        self.password_input = PasswordInput(self, self.file_selector)
+
+class FileSelector(ctk.CTkFrame):
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent,  **kwargs, fg_color = "lightblue")
+        self.pack(expand=True, fill="x", padx=10, pady=10)
+        self.file_path = ctk.CTkLabel(self, text="Pick a file...",
+                                  anchor="w",
+                                  font=("Arial", 16),
+                                  fg_color="white")
+        self.file_path.pack(side="left", padx=10, pady=10, expand=True, fill="x")
+        self.button = ctk.CTkButton(self, text="Select File", command=self.pick_file,
+                                    width=70)
+        self.button.pack(side="right", padx=10)
 
 
+    def pick_file(self, event=None):
+        file_picker = filedialog.askopenfilename()
+        if file_picker:
+            self.file_path.configure(text=file_picker)
 
 class PasswordInput(ctk.CTkFrame):
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent, file_selector, **kwargs):
         super().__init__(parent, **kwargs, fg_color="pink")
         self.pack(expand=True, fill="x", padx=10, pady=10)
+
+        self.file_selector = file_selector.file_path
 
         self.password_label1 = ctk.CTkEntry(self, placeholder_text="Enter Password", width=200)
         self.password_label1.pack( padx=10, pady=10,)
@@ -52,26 +71,11 @@ class PasswordInput(ctk.CTkFrame):
             self.password_label1.delete(0, ctk.END)
             self.password_label2.delete(0, ctk.END)
             self.password_label1.focus()
+        else:
+            print(self.file_selector.cget("text"))
 
 
-class FileSelector(ctk.CTkFrame):
-    def __init__(self, parent, **kwargs):
-        super().__init__(parent,  **kwargs, fg_color = "lightblue")
-        self.pack(expand=True, fill="x", padx=10, pady=10)
-        self.label = ctk.CTkLabel(self, text="Pick a file...",
-                                  anchor="w",
-                                  font=("Arial", 16),
-                                  fg_color="white")
-        self.label.pack(side="left", padx=10, pady=10, expand=True, fill="x")
-        self.button = ctk.CTkButton(self, text="Select File", command=self.pick_file,
-                                    width=70)
-        self.button.pack(side="right", padx=10)
 
-
-    def pick_file(self, event=None):
-        file_picker = filedialog.askopenfilename()
-        if file_picker:
-            self.label.configure(text=file_picker)
 
 
 
