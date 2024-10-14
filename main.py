@@ -48,17 +48,22 @@ class FileSelector(ctk.CTkFrame):
 
 class PasswordInput(ctk.CTkFrame):
     def __init__(self, parent, file_selector, **kwargs):
-        super().__init__(parent, **kwargs, fg_color="pink")
+        super().__init__(parent, **kwargs)
         self.pack(expand=True, fill="x", padx=10, pady=10)
 
         self.file_selector = file_selector.file_path
 
-        self.password_label1 = ctk.CTkEntry(self, placeholder_text="Enter Password", width=200)
+        frame1 = ctk.CTkFrame(self)
+        frame1.pack(side="left")
+        self.password_label1 = ctk.CTkEntry(frame1, placeholder_text="Enter Password", width=200)
         self.password_label1.pack( padx=10, pady=10,)
-        self.password_label2 = ctk.CTkEntry(self, placeholder_text="Confirm Password", width=200)
-        self.password_label2.pack(padx=10, pady=10, )
+        self.password_label2 = ctk.CTkEntry(frame1, placeholder_text="Confirm Password", width=200)
+        self.password_label2.pack(padx=10)
 
-        self.encrypt_button = ctk.CTkButton(self, text="Encrypt File", command=self.encrypt,
+        frame2 = ctk.CTkFrame(self)
+        frame2.pack(side="right")
+
+        self.encrypt_button = ctk.CTkButton(frame2, text="Encrypt File", command=self.encrypt,
                                             width=150,
                                             height=50)
         self.encrypt_button.pack()
@@ -73,11 +78,6 @@ class PasswordInput(ctk.CTkFrame):
             self.password_label1.focus()
         else:
             print(self.file_selector.cget("text"))
-
-
-
-
-
 
 class Encrypter:
     def __init__(self):
