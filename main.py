@@ -6,10 +6,13 @@ from pathlib import Path
 import json
 
 import customtkinter as ctk
+from tkinter import filedialog
 
 def main():
     app = Application()
-    frame = Frame(app)
+    # frame = Frame(app)
+    file_selector = FileSelector(app)
+    file_selector.pack()
     app.mainloop()
 
 
@@ -28,11 +31,34 @@ class Frame(ctk.CTkFrame):
         entry = ctk.CTkEntry(self)
         entry.pack()
 
-        button = CustomButton(self, text="Press Me", command=self.button_press)
+        # button = CustomButton(self, text="Press Me", command=self.button_press)
+
+
+    # def pick_file_event(self, event=None):
+    #     file_picker = filedialog.askopenfilename()
+    #     if file_picker:
+    #         # Update the label text
+    #         self.pick_file_label.configure(text=f"{file_picker}")
 
     @staticmethod
     def button_press(event=None):
         print("Button Pressed")
+
+class FileSelector(ctk.CTkFrame):
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.label = ctk.CTkLabel(self, text="Pick a file...", font=("Arial", 16))
+        self.label.pack()
+        self.button = ctk.CTkButton(self, text="Select File", command=self.pick_file)
+        self.button.pack()
+
+    def pick_file(self, event=None):
+        file_picker = filedialog.askopenfilename()
+        if file_picker:
+            self.label.configure(text=file_picker)
+
+
+
 
 class CustomButton(ctk.CTkButton):
     def __init__(self, parent, **kwargs):
