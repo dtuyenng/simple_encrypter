@@ -12,45 +12,28 @@ def main():
     app = Application()
     # frame = Frame(app)
     file_selector = FileSelector(app)
-    file_selector.pack()
     app.mainloop()
 
 
 class Application(ctk.CTk):
-
     def __init__(self):
         super().__init__()
         self.geometry('600x400')
+        self.configure(fg_color="white")
 
-class Frame(ctk.CTkFrame):
-    def __init__(self, parent, **kwargs):
-        super().__init__(parent, **kwargs)
-        self.pack()
-        label = ctk.CTkLabel(self, text="Hello World")
-        label.pack()
-        entry = ctk.CTkEntry(self)
-        entry.pack()
-
-        # button = CustomButton(self, text="Press Me", command=self.button_press)
-
-
-    # def pick_file_event(self, event=None):
-    #     file_picker = filedialog.askopenfilename()
-    #     if file_picker:
-    #         # Update the label text
-    #         self.pick_file_label.configure(text=f"{file_picker}")
-
-    @staticmethod
-    def button_press(event=None):
-        print("Button Pressed")
 
 class FileSelector(ctk.CTkFrame):
     def __init__(self, parent, **kwargs):
-        super().__init__(parent, **kwargs)
-        self.label = ctk.CTkLabel(self, text="Pick a file...", font=("Arial", 16))
-        self.label.pack()
+        super().__init__(parent, fg_color = "lightblue", **kwargs)
+        self.pack(expand=True, fill="x", padx=10, pady=10)
+        self.label = ctk.CTkLabel(self, text="Pick a file...",
+                                  anchor="w",
+                                  font=("Arial", 16),
+                                  fg_color="white")
+        self.label.pack(side="left", padx=10, pady=10, expand=True, fill="x")
         self.button = ctk.CTkButton(self, text="Select File", command=self.pick_file)
-        self.button.pack()
+        self.button.pack(side="right", padx=10, pady=10)
+
 
     def pick_file(self, event=None):
         file_picker = filedialog.askopenfilename()
@@ -58,22 +41,6 @@ class FileSelector(ctk.CTkFrame):
             self.label.configure(text=file_picker)
 
 
-
-
-class CustomButton(ctk.CTkButton):
-    def __init__(self, parent, **kwargs):
-        super().__init__(parent, **kwargs)
-        self.pack()
-
-
-
-
-
-# button = ctk.CTkButton(app, text="Press Me",
-#                        fg_color= "red",
-#                        corner_radius= 20,
-#                        command = lambda: print("Hello World"))
-# button.pack()
 
 class Encrypter:
     def __init__(self):
