@@ -1,6 +1,4 @@
 import base64
-from os.path import expanduser
-
 from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
@@ -57,3 +55,4 @@ class Encrypter:
         except InvalidToken:
             print("Decryption failed. The password might be incorrect or the data might be corrupted.")
 
+print("the class ran")
