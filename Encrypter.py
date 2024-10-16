@@ -12,7 +12,7 @@ class Encrypter:
     @staticmethod
     def import_salt() -> str:
         json_data = json.loads(Path("config.json").read_text())
-        print("Config file loaded.")
+        # print("Config file loaded.")
         return json_data["salt"]
 
     def generate_key(self, password: str) -> bytes:

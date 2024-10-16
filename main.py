@@ -67,7 +67,9 @@ class TheEncrypter(ctk.CTkFrame):
         self.file_path = ctk.CTkLabel(self, text="Pick a file...",
                                   anchor="w",
                                   font=("Arial", 16),
-                                  fg_color="white")
+                                      width=400,
+                                      wraplength=400,
+                                  fg_color="white",)
         self.file_path.pack(side="left", padx=10, pady=10, expand=True, fill="x")
 
         self.select_button = ctk.CTkButton(self, text="Select File", command=self.pick_file,
@@ -107,9 +109,13 @@ class TheEncrypter(ctk.CTkFrame):
             password2_entry.delete(0, ctk.END)
             password1_entry.focus()
         else:
-            encrypter = Encrypter()
-            print(f"path: {file_path}")
-            encrypter.encrypt_file(file_path, password1)
+            try:
+                encrypter = Encrypter()
+                print(f"path: {file_path}")
+                encrypter.encrypt_file(file_path, password1)
+            except FileNotFoundError:
+                print("Pick a file")
+
 
 
 # def display_menu():
