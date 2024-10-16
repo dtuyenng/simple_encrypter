@@ -15,13 +15,81 @@ class Application(ctk.CTk):
 
         """ Encrypter """
         self.label1 = ctk.CTkLabel(self, text="Encrypter")
-        self.label1.pack()
+        # self.label1.pack()
         self.the_encrypter = TheEncrypter(self)
 
         """ Decrypter """
-        self.label2 = ctk.CTkLabel(self, text="Decrypter")
-        self.label2.pack()
-        self.the_decrypter = TheDecrypter(self)
+        # self.label2 = ctk.CTkLabel(self, text="Decrypter")
+        # self.label2.pack()
+        # self.the_decrypter = TheDecrypter(self)
+
+
+class TheEncrypter(ctk.CTkFrame):
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent,  **kwargs, fg_color = "lightgreen")
+        self.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
+
+        # self.grid_rowconfigure(0, weight=1)
+        # self.grid_columnconfigure(0,weight=1)
+
+        self.label_container = ctk.CTkLabel(self, width=420, height=20, fg_color="pink")
+        self.label_container.grid(row=0, column=0)
+
+
+        self.file_path = ctk.CTkLabel(self.label_container, text="Pick a file...",
+                                      anchor="w",
+                                      font=("Arial", 16),
+                                      width=375,
+                                      wraplength=370,
+                                      fg_color="white")
+        self.file_path.grid(row=0, column=0)
+
+
+        self.select_button = ctk.CTkButton(self, text="...",
+                                           command=self.pick_file,
+                                           width=100)
+        self.select_button.grid(row=0, column=1, padx=5, sticky="e")
+
+        self.decrypt_frame(self, self.file_path)
+
+
+    def pick_file(self, event=None):
+        file_picker = filedialog.askopenfilename()
+        if file_picker:
+            self.file_path.configure(text=file_picker)
+
+    def decrypt_frame(self, parent, file_path):
+
+        password_label1 = ctk.CTkEntry(parent, placeholder_text="Enter Password", width=300)
+        password_label1.grid(row=1, column=0, pady=5, sticky="e")
+
+        password_label2 = ctk.CTkEntry(parent, placeholder_text="Confirm Password", width=300)
+        password_label2.grid(row=2, column=0, pady=5, sticky="e")
+
+        encrypt_button = ctk.CTkButton(parent, text="Encrypt File",
+                                        command= lambda: self.encrypt(file_path, password_label1, password_label2),
+                                        width=100,
+                                        height=70)
+        encrypt_button.grid(row=1, column=1, rowspan=2, pady=5, padx=5, stick="n")
+
+    def encrypt(self, file_path, password1_entry, password2_entry):
+        password1 = password1_entry.get()
+        password2 = password2_entry.get()
+
+        file_path = file_path.cget("text")
+        if password1 != password2:
+            print("Passwords don't match, try again")
+            # Clear both password fields
+            password1_entry.delete(0, ctk.END)
+            password2_entry.delete(0, ctk.END)
+            password1_entry.focus()
+        else:
+            try:
+                encrypter = Encrypter()
+                print(f"path: {file_path}")
+                encrypter.encrypt_file(file_path, password1)
+            except FileNotFoundError:
+                print("Pick a file")
 
 class TheDecrypter(ctk.CTkFrame):
     def __init__(self, parent, **kwargs):
@@ -59,62 +127,6 @@ class TheDecrypter(ctk.CTkFrame):
         if file_picker:
             self.file_path.configure(text=file_picker)
 
-class TheEncrypter(ctk.CTkFrame):
-    def __init__(self, parent, **kwargs):
-        super().__init__(parent,  **kwargs, fg_color = "lightgreen")
-        self.pack(expand=True, fill="x", padx=10, pady=10)
-
-        self.file_path = ctk.CTkLabel(self, text="Pick a file...",
-                                  anchor="w",
-                                  font=("Arial", 16),
-                                      width=400,
-                                      wraplength=400,
-                                  fg_color="white",)
-        self.file_path.pack(side="left", padx=10, pady=10, expand=True, fill="x")
-
-        self.select_button = ctk.CTkButton(self, text="Select File", command=self.pick_file,
-                                    width=70)
-        self.select_button.pack(side="right", padx=10)
-
-        self.decrypt_frame(self, self.file_path)
-
-
-    def pick_file(self, event=None):
-        file_picker = filedialog.askopenfilename()
-        if file_picker:
-            self.file_path.configure(text=file_picker)
-
-    def decrypt_frame(self, parent, file_path):
-
-        password_label1 = ctk.CTkEntry(parent, placeholder_text="Enter Password", width=200)
-        password_label1.pack(padx=10, pady=10, )
-        password_label2 = ctk.CTkEntry(parent, placeholder_text="Confirm Password", width=200)
-        password_label2.pack(padx=10)
-
-        encrypt_button = ctk.CTkButton(parent, text="Encrypt File",
-                                        command= lambda: self.encrypt(file_path, password_label1, password_label2),
-                                        width=150,
-                                        height=50)
-        encrypt_button.pack()
-
-    def encrypt(self, file_path, password1_entry, password2_entry):
-        password1 = password1_entry.get()
-        password2 = password2_entry.get()
-
-        file_path = file_path.cget("text")
-        if password1 != password2:
-            print("Passwords don't match, try again")
-            # Clear both password fields
-            password1_entry.delete(0, ctk.END)
-            password2_entry.delete(0, ctk.END)
-            password1_entry.focus()
-        else:
-            try:
-                encrypter = Encrypter()
-                print(f"path: {file_path}")
-                encrypter.encrypt_file(file_path, password1)
-            except FileNotFoundError:
-                print("Pick a file")
 
 
 
