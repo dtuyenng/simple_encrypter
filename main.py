@@ -38,6 +38,22 @@ class TheDecrypter(ctk.CTkFrame):
                                            width=70)
         self.select_button.pack(side="right", padx=10)
 
+        password_label = ctk.CTkEntry(self, placeholder_text="Enter Password", width=200)
+        password_label.pack()
+
+
+        decrypt_button = ctk.CTkButton(parent, text="Decrypt File",
+                                        command= lambda: self.decrypt(self.file_path, password_label),
+                                        width=150,
+                                        height=50)
+        decrypt_button.pack()
+
+    def decrypt(self, file_path, password_entry):
+        password = password_entry.get()
+        print(file_path.cget("text"))
+        print(password)
+
+
     def pick_file(self, event=None):
         file_picker = filedialog.askopenfilename()
         if file_picker:
@@ -58,7 +74,7 @@ class TheEncrypter(ctk.CTkFrame):
                                     width=70)
         self.select_button.pack(side="right", padx=10)
 
-        self.password_input_frame(parent, self.file_path)
+        self.decrypt_frame(self, self.file_path)
 
 
     def pick_file(self, event=None):
@@ -66,17 +82,14 @@ class TheEncrypter(ctk.CTkFrame):
         if file_picker:
             self.file_path.configure(text=file_picker)
 
-    def password_input_frame(self, parent, file_path):
+    def decrypt_frame(self, parent, file_path):
 
-        password_frame = ctk.CTkFrame(parent, fg_color = "pink")
-        password_frame.pack(expand=True, fill="x", padx=10, pady=10)
-
-        password_label1 = ctk.CTkEntry(password_frame, placeholder_text="Enter Password", width=200)
+        password_label1 = ctk.CTkEntry(parent, placeholder_text="Enter Password", width=200)
         password_label1.pack(padx=10, pady=10, )
-        password_label2 = ctk.CTkEntry(password_frame, placeholder_text="Confirm Password", width=200)
+        password_label2 = ctk.CTkEntry(parent, placeholder_text="Confirm Password", width=200)
         password_label2.pack(padx=10)
 
-        encrypt_button = ctk.CTkButton(password_frame, text="Encrypt File",
+        encrypt_button = ctk.CTkButton(parent, text="Encrypt File",
                                         command= lambda: self.encrypt(file_path, password_label1, password_label2),
                                         width=150,
                                         height=50)
